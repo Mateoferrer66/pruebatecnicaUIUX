@@ -1,3 +1,12 @@
+<?php
+// Start session to store CSRF token
+session_start();
+
+// Generate CSRF token and store it in the session
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,9 +23,8 @@
 
         <form id="contactForm" action="process_form.php" method="POST" novalidate>
             <!-- CSRF Protection -->
-            <input type="hidden" name="csrf_token" value="secure_csrf_token">
-            <input type="hidden" name="csrf_token" value="dummy_token">
-         
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+
             <div class="form-group">
                 <label for="name">Nombre</label>
                 <input type="text" id="name" name="name" required minlength="2" maxlength="50">

@@ -1,4 +1,7 @@
 <?php
+// Start session to access CSRF token
+session_start();
+
 // Security headers
 header('Content-Type: application/json');
 
@@ -35,15 +38,9 @@ try {
 
 // Function to validate CSRF token
 function validateCSRFToken() {
-    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== generateToken()) {
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
         throw new Exception('Token CSRF inválido.');
     }
-}
-
-// Function to generate a CSRF token (for demonstration purposes)
-function generateToken() {
-    // Replace this with your actual token generation logic
-    return 'secure_csrf_token';
 }
 
 // Function to sanitize input
@@ -54,7 +51,6 @@ function sanitizeInput($input) {
 // Function to send email (dummy implementation)
 function sendEmail($name, $email, $message) {
     // Replace this with actual email sending logic (e.g., using PHPMailer or mail())
-    // For now, just log the data
     error_log("Email sent to $email with message: $message");
 }
 ?>
